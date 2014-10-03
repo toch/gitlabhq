@@ -19,7 +19,7 @@ class Projects::TeamMembersController < Projects::ApplicationController
     @project.team << [users, params[:access_level]]
 
     if params[:redirect_to]
-      redirect_to params[:redirect_to]
+      URI.parse(params[:redirect_to]).path
     else
       redirect_to project_team_index_path(@project)
     end
