@@ -1,0 +1,8 @@
+---
+languages:
+  - ruby
+excludes:
+  - bin
+  - vendor
+  - spec
+  - features
