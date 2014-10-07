@@ -1,3 +1,4 @@
+# Provides a centralized email notification
 class Notify < ActionMailer::Base
   include ActionDispatch::Routing::PolymorphicRoutes
 
@@ -37,11 +38,12 @@ class Notify < ActionMailer::Base
   # Return an email address that displays the name of the sender.
   # Only the displayed name changes; the actual email address is always the same.
   def sender(sender_id)
-    if sender = User.find(sender_id)
-      address = default_sender_address
-      address.display_name = sender.name
-      address.format
-    end
+    sender = User.find(sender_id)
+    return unless sender
+
+    address = default_sender_address
+    address.display_name = sender.name
+    address.format
   end
 
   # Look up a User by their ID and return their email address
@@ -50,9 +52,10 @@ class Notify < ActionMailer::Base
   #
   # Returns a String containing the User's email address.
   def recipient(recipient_id)
-    if recipient = User.find(recipient_id)
-      recipient.email
-    end
+    recipient = User.find(recipient_id)
+    return unless recipient
+    
+    recipient.email
   end
 
   # Set the References header field
@@ -117,7 +120,7 @@ class Notify < ActionMailer::Base
     headers['In-Reply-To'] = message_id(model)
     headers['References'] = message_id(model)
 
-    if (headers[:subject])
+    if headers[:subject]
       headers[:subject].prepend('Re: ')
     end
 
